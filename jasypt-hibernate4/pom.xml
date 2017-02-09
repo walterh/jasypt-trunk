@@ -24,13 +24,15 @@
   <groupId>org.jasypt</groupId>
   <artifactId>jasypt-hibernate4</artifactId>
   <packaging>jar</packaging>
-  <version>1.9.3-SNAPSHOT</version>
+  <version>1.9.2</version>
   <name>JASYPT: Java Simplified Encryption</name>
   <url>http://www.jasypt.org</url>
 
   <description>Java library which enables encryption in java apps with minimum effort.</description>
 
-
+    <properties>
+        <slf4j.version>1.7.21</slf4j.version>
+    </properties>
 
   <licenses>
     <license>
@@ -131,10 +133,10 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3.2</version>
+        <version>3.5.1</version>
         <configuration>
-          <source>1.4</source>
-          <target>1.4</target>
+          <source>1.8</source>
+          <target>1.8</target>
           <encoding>US-ASCII</encoding>
         </configuration>
       </plugin>
@@ -147,43 +149,38 @@
           <encoding>US-ASCII</encoding>
         </configuration>
       </plugin>
-      
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.7</version>
-        <configuration>
-          <show>protected</show>
-          <noqualifier>java.lang</noqualifier>
-          <excludePackageNames>org.jasypt.contrib.*</excludePackageNames>
-          <links>
-            <link>http://www.jasypt.org/api/jasypt/${project.version}/</link>
-          </links>
-        </configuration>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
-        <version>2.1.2</version>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
       </plugin>
-      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+            <executions>
+                <execution>
+                    <id>attach-javadocs</id>
+                    <goals>
+                        <goal>jar</goal>
+                    </goals>
+                    <!-- http://stackoverflow.com/questions/15886209/maven-is-not-working-in-java-8-when-javadoc-tags-are-incomplete -->
+                    <configuration>
+                        <additionalparam>-Xdoclint:none</additionalparam>
+                    </configuration>
+                </execution>
+            </executions>
+      </plugin>
+
+<!--      
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-gpg-plugin</artifactId>
@@ -207,7 +204,7 @@
           <tagBase>https://svn.code.sf.net/p/jasypt/code/tags/jasypt-hibernate4</tagBase>
         </configuration>
       </plugin>
-
+  -->
 
     </plugins>
     
@@ -220,7 +217,7 @@
     <dependency>
       <groupId>org.jasypt</groupId>
       <artifactId>jasypt</artifactId>
-      <version>1.9.3-SNAPSHOT</version>
+      <version>1.9.2</version>
       <scope>compile</scope>
     </dependency>
     
@@ -261,6 +258,19 @@
         <scope>test</scope>
     </dependency>
     
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.8</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+
   </dependencies>
 
   

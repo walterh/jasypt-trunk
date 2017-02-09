@@ -33,7 +33,10 @@ import org.hibernate.usertype.UserType;
 import org.jasypt.encryption.pbe.PBEStringEncryptor;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.exceptions.EncryptionInitializationException;
+import org.jasypt.exceptions.EncryptionOperationNotPossibleException;
 import org.jasypt.hibernate4.encryptor.HibernatePBEEncryptorRegistry;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  *
@@ -45,6 +48,7 @@ import org.jasypt.hibernate4.encryptor.HibernatePBEEncryptorRegistry;
  * @author Iv&aacute;n Garc&iacute;a S&aacute;inz-Aja
  * 
  */
+@Slf4j
 public abstract class AbstractEncryptedAsStringType 
         implements UserType, ParameterizedType {
 
@@ -140,8 +144,19 @@ public abstract class AbstractEncryptedAsStringType
         
         checkInitialization();
         final String message = rs.getString(names[0]);
-        return rs.wasNull() ? null : convertToObject(this.encryptor.decrypt(message));
         
+        // walterh: make this work
+        if (rs.wasNull() || message == null || message.length() == 0) {
+            return null;
+        } else {
+            try {
+                return convertToObject(this.encryptor.decrypt(message));
+            } catch (EncryptionOperationNotPossibleException e) {
+                log.error("could not decrypt message = " + message);
+                
+                return null;
+            }
+        }        
     }
 
     
